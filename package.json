@@ -1,0 +1,32 @@
+{
+  "name": "@roland1993/api",
+  "version": "0.0.1",
+  "description": "A nice axios wrapper",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "/dist"
+  ],
+  "author": "Roland Doda <rolanddoda2014@gmail.com>",
+  "scripts": {
+    "lint": "eslint --fix --ext .js,ts src/**"
+  },
+  "keywords": [
+    "axios",
+    "api"
+  ],
+  "optionalDependencies": {
+    "axios": "^0.23.0"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.0.0",
+    "@typescript-eslint/parser": "^5.0.0",
+    "eslint": "^8.0.1",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "prettier": "^2.4.1",
+    "typescript": "^4.4.4"
+  },
+  "dependencies": {}
+}
