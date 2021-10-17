@@ -18,6 +18,9 @@
     "api",
     "axios wrapper"
   ],
+  "publishConfig": {
+    "access": "public"
+  },
   "homepage": "https://github.com/Rolanddoda/api#readme",
   "optionalDependencies": {
     "axios": "^0.23.0"
