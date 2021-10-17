@@ -1,33 +1,75 @@
-import axios, { AxiosPromise, AxiosRequestConfig, AxiosInstance, CancelTokenSource } from 'axios'
+import axios, { AxiosInstance, AxiosPromise, AxiosRequestConfig, CancelTokenSource } from 'axios'
 
 const cancelTokens = new Map()
 
-export function api(url: string, config: AxiosRequestConfig = {}, instance: AxiosInstance): AxiosPromise {
+function joinUrls(urls: string[]) {
+  const separator = '/'
+  const replace = new RegExp(separator + '{1,}', 'g')
+
+  return urls.join(separator).replace(replace, separator)
+}
+
+function getCancelToken() {
   const cancelToken: CancelTokenSource = axios.CancelToken.source()
 
   cancelTokens.set(cancelToken.token, cancelToken)
 
-  return instance(url, { ...config, cancelToken: cancelToken.token }).finally(() =>
-    cancelTokens.delete(cancelToken.token)
-  )
+  return cancelToken.token
 }
 
-export const cancelAllPendingRequests = () => cancelTokens.forEach((cancelToken) => cancelToken.cancel())
+export function api(baseUrl: string, instance: AxiosInstance) {
+  return {
+    get: (url: string | number = '', config?: AxiosRequestConfig): AxiosPromise => {
+      const cancelToken = getCancelToken()
 
-export const define = (instance: AxiosInstance) => ({
-  get: (url: string, config?: AxiosRequestConfig) => api(url, { method: 'GET', ...config }, instance),
+      return instance(joinUrls([baseUrl, url.toString()]), {
+        method: 'GET',
+        cancelToken,
+        ...config
+      }).finally(() => cancelTokens.delete(cancelToken))
+    },
 
-  post: (url: string, data: unknown, config?: AxiosRequestConfig) => {
-    return api(url, { method: 'POST', data, ...config }, instance)
-  },
+    post: (data: any, config?: AxiosRequestConfig): AxiosPromise => {
+      const cancelToken = getCancelToken()
 
-  put: (url: string, data: unknown, config?: AxiosRequestConfig) => {
-    return api(url, { method: 'PUT', data, ...config }, instance)
-  },
+      return instance(baseUrl, { method: 'POST', data, cancelToken, ...config }).finally(() =>
+        cancelTokens.delete(cancelToken)
+      )
+    },
 
-  patch: (url: string, data: unknown, config?: AxiosRequestConfig) => {
-    return api(url, { method: 'PATCH', data, ...config }, instance)
-  },
+    put: (url: string | number, data: any, config?: AxiosRequestConfig): AxiosPromise => {
+      const cancelToken = getCancelToken()
 
-  delete: (url: string, config?: AxiosRequestConfig) => api(url, { method: 'DELETE', ...config }, instance)
-})
+      return instance(joinUrls([baseUrl, url.toString()]), {
+        method: 'POST',
+        data,
+        cancelToken,
+        ...config
+      }).finally(() => cancelTokens.delete(cancelToken))
+    },
+
+    patch: (url: string | number, data: any, config?: AxiosRequestConfig): AxiosPromise => {
+      const cancelToken = getCancelToken()
+
+      return instance(joinUrls([baseUrl, url.toString()]), {
+        method: 'PATCH',
+        data,
+        cancelToken,
+        ...config
+      }).finally(() => cancelTokens.delete(cancelToken))
+    },
+
+    delete: (url: string | number, config?: AxiosRequestConfig): AxiosPromise => {
+      const cancelToken = getCancelToken()
+
+      return instance(joinUrls([baseUrl, url.toString()]), {
+        method: 'DELETE',
+        cancelToken,
+        ...config
+      }).finally(() => cancelTokens.delete(cancelToken))
+    }
+  }
+}
+
+export const cancelPendingRequests = () =>
+  cancelTokens.forEach((cancelToken) => cancelToken.cancel())

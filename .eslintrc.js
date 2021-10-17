@@ -1,13 +1,18 @@
 module.exports = {
   root: true,
 
-  extends: ['eslint:recommended', 'plugin:@typescript-eslint/recommended', 'plugin:prettier/recommended'],
+  extends: [
+    'eslint:recommended',
+    'plugin:@typescript-eslint/recommended',
+    'plugin:prettier/recommended'
+  ],
 
   plugins: ['@typescript-eslint', 'prettier'],
 
   env: {
     es2021: true,
-    browser: true
+    browser: true,
+    node: true
   },
 
   parser: '@typescript-eslint/parser',
@@ -17,10 +22,11 @@ module.exports = {
   },
 
   rules: {
+    '@typescript-eslint/no-explicit-any': 'off',
     'prettier/prettier': [
       'error',
       {
-        printWidth: 120,
+        printWidth: 100,
         singleQuote: true,
         semi: false,
         trailingComma: 'none'
