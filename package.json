@@ -10,7 +10,8 @@
   ],
   "author": "Roland Doda <rolanddoda2014@gmail.com>",
   "scripts": {
-    "lint": "eslint --fix --ext .js,ts src/**"
+    "lint": "eslint --fix --ext .js,ts src/**",
+    "release": "np --no-tests --no-yarn"
   },
   "keywords": [
     "axios",
