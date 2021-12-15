@@ -1,4 +1,11 @@
-import axios, { AxiosInstance, AxiosPromise, AxiosRequestConfig, CancelTokenSource } from 'axios'
+import axios, {
+  AxiosInstance,
+  AxiosPromise,
+  AxiosRequestConfig,
+  AxiosResponse,
+  CancelTokenSource
+} from 'axios'
+import { ref, shallowRef } from 'vue'
 
 const cancelTokens = new Map()
 
@@ -14,25 +21,56 @@ function getCancelToken() {
 
   cancelTokens.set(cancelToken.token, cancelToken)
 
-  return cancelToken.token
+  return cancelToken
 }
 
 export function api(baseUrl: string, instance: AxiosInstance) {
   return {
-    get: (url: string | number = '', config?: AxiosRequestConfig): AxiosPromise => {
+    get: (url: string | number = '', config?: AxiosRequestConfig) => {
+      const loading = ref(false)
       const cancelToken = getCancelToken()
+      const data = shallowRef<any>()
+      const response = shallowRef<AxiosResponse>()
+      let requestFinished = false
 
-      return instance(joinUrls([baseUrl, url.toString()]), {
-        method: 'GET',
-        cancelToken,
-        ...config
-      }).finally(() => cancelTokens.delete(cancelToken))
+      return {
+        data,
+        loading,
+        response,
+        abort(msg?: string) {
+          if (requestFinished || !loading.value) return
+
+          cancelToken.cancel(msg)
+          loading.value = false
+          requestFinished = true
+        },
+        request() {
+          loading.value = true
+
+          return instance(joinUrls([baseUrl, url.toString()]), {
+            method: 'GET',
+            cancelToken: cancelToken.token,
+            ...config
+          })
+            .then((res) => {
+              data.value = res.data
+              response.value = res
+
+              return res
+            })
+            .finally(() => {
+              cancelTokens.delete(cancelToken)
+              loading.value = false
+              requestFinished = true
+            })
+        }
+      }
     },
 
     post: (data: any, config?: AxiosRequestConfig): AxiosPromise => {
       const cancelToken = getCancelToken()
 
-      return instance(baseUrl, { method: 'POST', data, cancelToken, ...config }).finally(() =>
+      return instance(baseUrl, { method: 'POST', data, cancelToken: cancelToken.token, ...config }).finally(() =>
         cancelTokens.delete(cancelToken)
       )
     },
@@ -43,7 +81,7 @@ export function api(baseUrl: string, instance: AxiosInstance) {
       return instance(joinUrls([baseUrl, url.toString()]), {
         method: 'POST',
         data,
-        cancelToken,
+        cancelToken: cancelToken.token,
         ...config
       }).finally(() => cancelTokens.delete(cancelToken))
     },
@@ -54,7 +92,7 @@ export function api(baseUrl: string, instance: AxiosInstance) {
       return instance(joinUrls([baseUrl, url.toString()]), {
         method: 'PATCH',
         data,
-        cancelToken,
+        cancelToken: cancelToken.token,
         ...config
       }).finally(() => cancelTokens.delete(cancelToken))
     },
@@ -64,7 +102,7 @@ export function api(baseUrl: string, instance: AxiosInstance) {
 
       return instance(joinUrls([baseUrl, url.toString()]), {
         method: 'DELETE',
-        cancelToken,
+        cancelToken: cancelToken.token,
         ...config
       }).finally(() => cancelTokens.delete(cancelToken))
     }
