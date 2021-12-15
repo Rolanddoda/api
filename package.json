@@ -3,15 +3,24 @@
   "version": "0.1.0",
   "description": "A nice axios wrapper",
   "license": "MIT",
-  "main": "dist/index.js",
+  "main": "dist/index.mjs",
   "types": "dist/index.d.ts",
   "files": [
     "dist/**/*"
   ],
+  "exports": {
+    ".": {
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs",
+      "types": "./dist/index.d.ts"
+    }
+  },
   "author": "Roland Doda <rolanddoda2014@gmail.com>",
   "scripts": {
     "lint": "eslint --fix --ext .js,ts src/**",
-    "release": "np --no-tests --no-yarn"
+    "release": "np --no-tests --no-yarn",
+    "build": "tsup src/index.ts --format cjs,esm --dts --clean",
+    "dev": "npm run build -- --watch src"
   },
   "keywords": [
     "axios",
@@ -32,6 +41,23 @@
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^4.0.0",
     "prettier": "^2.4.1",
+    "tsup": "^5.11.6",
     "typescript": "^4.4.4"
+  },
+
+  "peerDependencies": {
+    "@vue/composition-api": "^1.1.0",
+    "vue": "^2.6.0 || ^3.2.0"
+  },
+  "peerDependenciesMeta": {
+    "vue": {
+      "optional": true
+    },
+    "@vue/composition-api": {
+      "optional": true
+    }
+  },
+  "dependencies": {
+    "vue-demi": "*"
   }
 }
