@@ -41,36 +41,37 @@ export function api(baseUrl: string, instance: AxiosInstance) {
         .finally(() => cancelTokens.delete(cancelToken))
     },
 
-    put: (url: string | number, data: any, config?: AxiosRequestConfig): AxiosPromise => {
+    put: (url: string | number = '', data: any, config?: AxiosRequestConfig): AxiosPromise => {
       const cancelToken = getCancelToken()
 
-      return instance(joinUrls([baseUrl, url.toString()]), {
-        method: 'POST',
-        data,
-        cancelToken: cancelToken.token,
-        ...config
-      }).finally(() => cancelTokens.delete(cancelToken))
+      return instance
+        .put(joinUrls([baseUrl, url.toString()]), data, {
+          ...config,
+          cancelToken: cancelToken.token
+        })
+        .finally(() => cancelTokens.delete(cancelToken))
     },
 
-    patch: (url: string | number, data: any, config?: AxiosRequestConfig): AxiosPromise => {
+    patch: (url: string | number = '', data: any, config?: AxiosRequestConfig): AxiosPromise => {
       const cancelToken = getCancelToken()
 
-      return instance(joinUrls([baseUrl, url.toString()]), {
-        method: 'PATCH',
-        data,
-        cancelToken: cancelToken.token,
-        ...config
-      }).finally(() => cancelTokens.delete(cancelToken))
+      return instance
+        .patch(joinUrls([baseUrl, url.toString()]), data, {
+          ...config,
+          cancelToken: cancelToken.token
+        })
+        .finally(() => cancelTokens.delete(cancelToken))
     },
 
     delete: (url: string | number, config?: AxiosRequestConfig): AxiosPromise => {
       const cancelToken = getCancelToken()
 
-      return instance(joinUrls([baseUrl, url.toString()]), {
-        method: 'DELETE',
-        cancelToken: cancelToken.token,
-        ...config
-      }).finally(() => cancelTokens.delete(cancelToken))
+      return instance
+        .delete(joinUrls([baseUrl, url.toString()]), {
+          ...config,
+          cancelToken: cancelToken.token
+        })
+        .finally(() => cancelTokens.delete(cancelToken))
     }
   }
 }
