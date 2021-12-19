@@ -76,18 +76,24 @@ function request(baseUrl: string, instance: AxiosInstance, type: 'GET' | 'POST')
 
 export function api(baseUrl: string, instance: AxiosInstance) {
   return {
-    get: request(baseUrl, instance, 'GET'),
-
-    post: (data: any, config?: AxiosRequestConfig): AxiosPromise => {
-      const cancelToken = getCancelToken()
-
-      return instance(baseUrl, {
-        method: 'POST',
-        data,
-        cancelToken: cancelToken.token,
-        ...config
-      }).finally(() => cancelTokens.delete(cancelToken))
+    get(url: string | number = '', config?: AxiosRequestConfig) {
+      return instance.get(joinUrls([baseUrl, url.toString()]), config)
     },
+
+    post(data?: any, config?: AxiosRequestConfig) {
+      return instance.post(baseUrl, data, config)
+    },
+
+    // post: (data: any, config?: AxiosRequestConfig): AxiosPromise => {
+    //   const cancelToken = getCancelToken()
+    //
+    //   return instance(baseUrl, {
+    //     method: 'POST',
+    //     data,
+    //     cancelToken: cancelToken.token,
+    //     ...config
+    //   }).finally(() => cancelTokens.delete(cancelToken))
+    // },
 
     put: (url: string | number, data: any, config?: AxiosRequestConfig): AxiosPromise => {
       const cancelToken = getCancelToken()
