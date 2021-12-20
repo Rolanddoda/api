@@ -32,9 +32,10 @@ export function api(baseUrl: string, instance: AxiosInstance) {
 
     post(data?: any, config?: AxiosRequestConfig) {
       const cancelToken = getCancelToken()
+      const url = joinUrls([baseUrl, config?.url || ''])
 
       return instance
-        .post(baseUrl, data, {
+        .post(url, data, {
           ...config,
           cancelToken: cancelToken.token
         })
