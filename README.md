@@ -69,3 +69,38 @@ export const getPost = id => posts.get(id)
 export const putPost = (id, data) => posts.put(id, data)
 export const deletePost = id => posts.delete(id)
 ```
+
+> **Step3: How to use**
+
+You either import the APIs from each file:
+
+```js
+import { getPosts } from '@api/modules/posts'
+
+getPosts()
+  .then()
+  .catch()
+  .finally()
+```
+
+or export them in `@api/index.js` file and import them from there:
+
+**@api/index.js**
+```js
+// ...
+
+export * from './modules/posts'
+```
+
+Then you can use it in your app:
+
+```js
+import * as request from '@api'
+
+request.getPosts()
+  .then()
+  .catch()
+  .finally()
+```
+
+------------------
