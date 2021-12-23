@@ -19,56 +19,64 @@ function getCancelToken() {
 
 export function api(baseUrl: string, instance: AxiosInstance) {
   return {
-    get(url: string | number = '', config?: AxiosRequestConfig) {
+    get<D = unknown>(url: string | number = '', config?: AxiosRequestConfig): AxiosPromise<D> {
       const cancelToken = getCancelToken()
 
       return instance
-        .get(joinUrls([baseUrl, url.toString()]), {
+        .get<D>(joinUrls([baseUrl, url.toString()]), {
           ...config,
           cancelToken: cancelToken.token
         })
         .finally(() => cancelTokens.delete(cancelToken))
     },
 
-    post(data?: any, config?: AxiosRequestConfig) {
+    post<D = unknown>(data?: D, config?: AxiosRequestConfig): AxiosPromise<D> {
       const cancelToken = getCancelToken()
       const url = joinUrls([baseUrl, config?.url || ''])
 
       return instance
-        .post(url, data, {
+        .post<D>(url, data, {
           ...config,
           cancelToken: cancelToken.token
         })
         .finally(() => cancelTokens.delete(cancelToken))
     },
 
-    put: (url: string | number = '', data: any, config?: AxiosRequestConfig): AxiosPromise => {
+    put<D = unknown>(
+      url: string | number = '',
+      data: D,
+      config?: AxiosRequestConfig
+    ): AxiosPromise<D> {
       const cancelToken = getCancelToken()
 
       return instance
-        .put(joinUrls([baseUrl, url.toString()]), data, {
+        .put<D>(joinUrls([baseUrl, url.toString()]), data, {
           ...config,
           cancelToken: cancelToken.token
         })
         .finally(() => cancelTokens.delete(cancelToken))
     },
 
-    patch: (url: string | number = '', data: any, config?: AxiosRequestConfig): AxiosPromise => {
+    patch<D = unknown>(
+      url: string | number = '',
+      data: D,
+      config?: AxiosRequestConfig
+    ): AxiosPromise<D> {
       const cancelToken = getCancelToken()
 
       return instance
-        .patch(joinUrls([baseUrl, url.toString()]), data, {
+        .patch<D>(joinUrls([baseUrl, url.toString()]), data, {
           ...config,
           cancelToken: cancelToken.token
         })
         .finally(() => cancelTokens.delete(cancelToken))
     },
 
-    delete: (url: string | number, config?: AxiosRequestConfig): AxiosPromise => {
+    delete<D = unknown>(url: string | number, config?: AxiosRequestConfig): AxiosPromise<D> {
       const cancelToken = getCancelToken()
 
       return instance
-        .delete(joinUrls([baseUrl, url.toString()]), {
+        .delete<D>(joinUrls([baseUrl, url.toString()]), {
           ...config,
           cancelToken: cancelToken.token
         })
