@@ -35,6 +35,19 @@ const instance = axios.create({
 export const defineApi = (url) => api(url, instance)
 ```
 
+`api` function is a factory function that returns an object with methods to make requests.
+Specifically it returns:
+
+```js
+{
+  get: (url: string | number = '', config?: AxiosRequestConfig): AxiosPromise,
+  post: (data?: any, config?: AxiosRequestConfig): AxiosPromise,
+  put: (url: string | number = '', data: any, config?: AxiosRequestConfig): AxiosPromise,
+  patch: (url: string | number = '', data: any, config?: AxiosRequestConfig): AxiosPromise
+  delete: (url: string | number, config?: AxiosRequestConfig): AxiosPromise
+}
+```
+
 *In the file above we export a `defineApi` function which will be used to define APIs.
 If you use multiple axios instances, it would be useful to name this function related to the instance.*
 
