@@ -3,6 +3,7 @@
   "version": "0.2.0",
   "description": "A nice axios wrapper",
   "license": "MIT",
+  "files": ["dist"],
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
@@ -23,7 +24,8 @@
   "keywords": [
     "axios",
     "api",
-    "axios wrapper"
+    "axios wrapper",
+    "vue axios"
   ],
   "publishConfig": {
     "access": "public"
@@ -41,6 +43,6 @@
   },
   "peerDependencies": {
     "vue": "^3.2.0",
-    "axios": "^0.23.0"
+    "axios": "^0.21.4"
   }
 }
