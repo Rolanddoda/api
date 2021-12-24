@@ -67,7 +67,6 @@ const posts = defineApi('/posts')
 export const getPosts = () => posts.get()
 export const getPost = id => posts.get(id)
 export const putPost = (id, data) => posts.put(id, data)
-export const deletePost = id => posts.delete(id)
 ```
 
 > **Step3: How to use**
@@ -104,3 +103,32 @@ request.getPosts()
 ```
 
 ------------------
+
+### Typing APIs
+
+#### Typescript
+
+Typing with typescript is easy. You just pass a generic type to the request method.
+So the `modules/posts.ts` will look like this:
+
+```ts
+import { defineApi } from '@api'
+
+interface Post {
+  id: number
+  title: string
+  body: string
+  createdAt: string
+}
+
+interface NewPost {
+  title: string
+  body: string
+}
+
+const posts = defineApi('posts')
+
+export const getPosts = () => posts.get<Post[]>()
+export const getPost = (id: string) => posts.get<Post>(id)
+export const putPost = (id: string, data: NewPost) => posts.put<Post>(id, data)
+```
