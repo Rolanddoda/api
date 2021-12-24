@@ -1,4 +1,5 @@
 import axios, { AxiosInstance, AxiosPromise, AxiosRequestConfig, CancelTokenSource } from 'axios'
+import { ref } from 'vue'
 
 const cancelTokens = new Map()
 
@@ -87,3 +88,28 @@ export function api(baseUrl: string, instance: AxiosInstance) {
 
 export const cancelPendingRequests = () =>
   cancelTokens.forEach((cancelToken) => cancelToken.cancel())
+
+export const useApi = <T = unknown>(apiFunction: () => AxiosPromise<T>, immediate = true) => {
+  const loading = ref(false)
+  const data = ref<T>()
+
+  function call() {
+    loading.value = true
+    return apiFunction()
+      .then((res) => {
+        if (res?.data) data.value = res.data
+        loading.value = false
+
+        return res
+      })
+      .finally(() => (loading.value = false))
+  }
+
+  immediate && call()
+
+  return {
+    loading,
+    data,
+    call
+  }
+}
