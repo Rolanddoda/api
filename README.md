@@ -177,3 +177,12 @@ export const getPost = (id) => posts.get(id)
  */
 export const putPost = (id, data) => posts.put(id, data)
 ```
+### Cancel pending requests
+
+If you want to cancel all pending requests, you can use `cancelPendingRequests` function:
+
+```js
+import { cancelPendingRequests } from '@roland1993/api'
+
+cancelPendingRequests()
+```
