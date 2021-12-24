@@ -186,3 +186,60 @@ import { cancelPendingRequests } from '@roland1993/api'
 
 cancelPendingRequests()
 ```
+### Vue 3 usage
+
+If you are using Vue 3, this library exports a `useApi` function which makes working with APIs easier.
+
+Example:
+
+```vue
+<script>
+import { getPosts } from '@api/modules/posts'
+import { useApi } from '@roland1993/api'
+
+export default {
+ setup() {
+   const { loading, data } = useApi(getPosts)
+
+   return {
+     loading,
+     data
+   }
+ }
+}
+</script>
+```
+
+`useApi` returns:
+
+- `loading`: A boolean [ref](https://v3.vuejs.org/api/refs-api.html#ref)
+- `data`: A [ref](https://v3.vuejs.org/api/refs-api.html#ref) returned by the API from `response.data`
+- `call`: A function which will call the API
+
+The first argument passed to `useApi` is the API function as you can see from the example above.
+`useApi` **calls the API function immediately**. If you don't the want API to be called immediately, you can use pass `false` as second argument:
+
+```vue
+<script>
+import { getPosts } from '@api/modules/posts'
+import { useApi } from '@roland1993/api'
+
+export default {
+ setup() {
+   const { loading, data, call } = useApi(getPosts, false)
+
+   return {
+     loading,
+     data,
+     call
+   }
+ }
+}
+</script>
+
+<template>
+  /* ... */
+  <button @click="call">Call the API</button>
+</template>
+```
+
