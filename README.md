@@ -60,7 +60,7 @@ Let's start by creating a module for `/posts` API.
 **modules/posts.js**
 
 ```js
-import { defineApi } from '../api'
+import { defineApi } from '@api'
 
 const posts = defineApi('/posts')
 
@@ -131,4 +131,49 @@ const posts = defineApi('posts')
 export const getPosts = () => posts.get<Post[]>()
 export const getPost = (id: string) => posts.get<Post>(id)
 export const putPost = (id: string, data: NewPost) => posts.put<Post>(id, data)
+```
+
+#### Javascript
+
+Even if you don't use typescript, you can still type APIs by using JSDoc:
+
+```js
+import { defineApi } from '@api'
+
+const posts = defineApi('posts')
+
+/**
+ * @typedef Post
+ * @property {number} id
+ * @property {string} title
+ * @property {string} body
+ * @property {string} createdAt
+ */
+
+/**
+ * @typedef NewPost
+ * @property {string} title
+ * @property {string} body
+ */
+
+/**
+ * @description GET /posts
+ * @returns {AxiosPromise<Post[]>}
+ */
+export const getPosts = () => posts.get()
+
+/**
+ * @description GET /posts/{param}
+ * @param {string | number} id
+ * @returns {AxiosPromise<Post>}
+ */
+export const getPost = (id) => posts.get(id)
+
+/**
+ * @description PUT /posts/id
+ * @param {string | number} id
+ * @param {NewPost} data
+ * @returns {AxiosPromise<Post>}
+ */
+export const putPost = (id, data) => posts.put(id, data)
 ```
